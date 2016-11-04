@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sunshine</string>
+    <string name="hello_world">Today Nov 4</string>
+    <string name="tem_high">21°</string>
+    <string name="tem_low">8°</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
