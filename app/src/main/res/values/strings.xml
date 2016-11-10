@@ -6,6 +6,8 @@
     <string name="tem_high">21°</string>
     <string name="tem_low">8°</string>
     <string name="action_settings">Settings</string>
+    <string name="title_action_settings">Settings</string>
     <string name="action_refresh" translatable="false">Refresh</string>
-
+    <string name="title_activity_datail">DatailActivity</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>
