@@ -5,9 +5,11 @@ package com.example.android.sunshine.app;
  */
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,13 +56,26 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute("1816670");
+            updateWeather();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+    }
+
+    private void updateWeather(){
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String units = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric));
+        weatherTask.execute(location, units);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,8 +93,8 @@ public class ForecastFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        FetchWeatherTask weatherTask = new FetchWeatherTask();
-        weatherTask.execute("1816670");
+//        FetchWeatherTask weatherTask = new FetchWeatherTask();
+//        weatherTask.execute("1816670");
 
         return rootView;
     }
@@ -98,7 +113,7 @@ public class ForecastFragment extends Fragment {
             Uri builtUri = Uri.parse(baseUrl).buildUpon()
                     .appendQueryParameter(cityCode, strings[0])
                     .appendQueryParameter(mode, "json")
-                    .appendQueryParameter(uniits, "metric")
+                    .appendQueryParameter(uniits, strings[1])
                     .appendQueryParameter(days, "7")
                     .appendQueryParameter(appID, "f24bd4b2d265dd3c8861f0642fa64045")
                     .build();
@@ -111,7 +126,7 @@ public class ForecastFragment extends Fragment {
             }
             String[] jsonResult = null;
             try {
-                jsonResult = WeatherDataParser.getWeatherDataFromJson(result, 7);
+                jsonResult = WeatherDataParser.getWeatherDataFromJson(result, 7, strings[1]);
             } catch (JSONException e) {
                 Log.e(ForecastFragment.class.getSimpleName(), e.toString());
             }
