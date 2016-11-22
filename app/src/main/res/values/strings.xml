@@ -33,5 +33,6 @@
     <!--openmap Menu-->
 
     <string name="action_openMap" translatable="false">Map Location</string>
+    <string name="action_share">share</string>
 
 </resources>
