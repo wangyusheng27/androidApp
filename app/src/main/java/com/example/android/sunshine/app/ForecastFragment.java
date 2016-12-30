@@ -69,13 +69,14 @@ public class ForecastFragment extends Fragment {
     }
 
     private void updateWeather(){
-        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), arrayAdapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         String units = prefs.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric));
         weatherTask.execute(location, units);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,54 +94,10 @@ public class ForecastFragment extends Fragment {
                 startActivity(intent);
             }
         });
-//        FetchWeatherTask weatherTask = new FetchWeatherTask();
-//        weatherTask.execute("1816670");
+
 
         return rootView;
     }
 
-    class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
-        @Override
-        protected String[] doInBackground(String... strings) {
-            String weatherUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?id=1816670&mode=json&units=metric&cnt=7&APPID=f24bd4b2d265dd3c8861f0642fa64045";
-            String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?";
-            final String cityCode = "id";
-            final String mode = "mode";
-            final String uniits = "units";
-            final String days = "cnt";
-            final String appID = "APPID";
-            Uri builtUri = Uri.parse(baseUrl).buildUpon()
-                    .appendQueryParameter(cityCode, strings[0])
-                    .appendQueryParameter(mode, "json")
-                    .appendQueryParameter(uniits, strings[1])
-                    .appendQueryParameter(days, "7")
-                    .appendQueryParameter(appID, "f24bd4b2d265dd3c8861f0642fa64045")
-                    .build();
-            String result = null;
-            try {
-                result = HttpUtil.httpGET(builtUri.toString());
-            } catch (IOException e) {
-                result = "";
-                Log.e(ForecastFragment.class.getSimpleName(), e.toString());
-            }
-            String[] jsonResult = null;
-            try {
-                jsonResult = WeatherDataParser.getWeatherDataFromJson(result, 7, strings[1]);
-            } catch (JSONException e) {
-                Log.e(ForecastFragment.class.getSimpleName(), e.toString());
-            }
-            return jsonResult;
-        }
-
-        @Override
-        protected void onPostExecute(String[] result) {
-            if (result != null){
-                arrayAdapter.clear();
-                for (String res : result){
-                    arrayAdapter.add(res);
-                }
-            }
-     }
-    }
 }
