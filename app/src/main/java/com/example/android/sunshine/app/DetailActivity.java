@@ -71,7 +71,8 @@ public class DetailActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            View rootView = inflater.inflate(R.layout.
+                    fragment_detail, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
             mForecastStr = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
             textView.setText(mForecastStr);
